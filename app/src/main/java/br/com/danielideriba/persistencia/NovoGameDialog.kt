@@ -6,18 +6,19 @@ import android.app.Dialog
 import android.app.AlertDialog
 import android.app.DialogFragment
 import android.os.AsyncTask
+import android.util.Log
+import android.widget.Spinner
 import br.com.danielideriba.persistencia.dao.BancoDeDados
 import br.com.danielideriba.persistencia.model.Game
 
 class NovoGameDialog : DialogFragment() {
     private lateinit var builder: AlertDialog.Builder
     private lateinit var etGame: EditText
-    private lateinit var etPlataforma: EditText
+    private lateinit var etPlataforma: Spinner
     override fun onCreateDialog(savedInstanceState: Bundle?):
             Dialog {
         builder = AlertDialog.Builder(activity)
-        val v =
-                activity.layoutInflater.inflate(R.layout.novo_game_dialog, null)
+        val v = activity.layoutInflater.inflate(R.layout.novo_game_dialog, null)
         etGame = v.findViewById(R.id.etGame)
         etPlataforma = v.findViewById(R.id.etPlataforma)
         builder.setView(v)
@@ -25,7 +26,8 @@ class NovoGameDialog : DialogFragment() {
         builder.setPositiveButton("Adicionar") { _, _ ->
             val db = BancoDeDados.getDatabase(activity.applicationContext)
             val game = Game(etGame.text.toString(),
-                    etPlataforma.text.toString())
+                    etPlataforma.selectedItem.toString())
+
             if (game.nome != "")
                 InsertAsyncTask(db!!).execute(game)
         }
